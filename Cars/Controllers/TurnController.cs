@@ -45,8 +45,8 @@ namespace Cars.Controllers
             {
                 dx = line.X - PointCentr.X;
                 dy = line.Y - PointCentr.Y;
-                line.X = (dx * cosTheta - dy * sinTheta) + PointCentr.X;
-                line.Y = (dx * sinTheta + dy * cosTheta) + PointCentr.Y;
+                line.X = (int)((dx * cosTheta - dy * sinTheta) + PointCentr.X);
+                line.Y = (int)((dx * sinTheta + dy * cosTheta) + PointCentr.Y);
             }
             return points;
         }
