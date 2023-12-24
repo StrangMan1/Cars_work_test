@@ -1,0 +1,64 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.app {
+    max-width: 1360px;
+    margin: 10px auto;
+}
+
+.cars-container {
+    border-radius: 4px;
+    border: 2px solid #ddd;
+    max-height: 680px;
+    margin-bottom: 10px;
+}
+
+.controls-container {
+    display: flex;
+    justify-content: center;
+}
+
+.controls {
+    border-radius: 4px;
+    border: 2px solid #ddd;
+    width: 200px;
+    margin: 0 5px
+}
+
+.car1-controls {
+    border-color: crimson;
+}
+
+.car2-controls {
+    border-color: dodgerblue;
+}
+
+.navigation button {
+    width: 50px;
+    margin: 5px;
+}
+
+.navigation {
+    text-align: center;
+}
+.parent-element {
+
+    border: none;
+}

@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>@ViewData["Title"] - Cars</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Cars.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="app">
+        <div class="cars-container">
+            <canvas id="canvas"></canvas>
+        </div>
+        <div class="controls-container">
+            <div class="car1-controls controls">
+                <div class="navigation">
+                    <div>
+                        <button id="car1-up-btn">Up</button>
+                        <button id="car1-down-btn">Down</button>
+                    </div>
+                    <div>
+                        <button id="car1-left-btn">Left</button>
+                        <button id="car1-right-btn">Right</button>
+                    </div>
+                    <div>
+                        <button id="car1-modify-btn">Revese </button>
+                    </div>
+                    <div>
+                        <button id="car1-rotate-positive">Turn Left</button>
+                        <button id="car1-rotate-negative">Turn Right</button>
+                    </div>
+                </div>
+            </div>
+            <div class="car2-controls controls">
+                <div class="navigation">
+                    <div>
+                        <button id="car2-up-btn">Up</button>
+                        <button id="car2-down-btn">Down</button>
+                    </div>
+                    <div>
+                        <button id="car2-left-btn">Left</button>
+                        <button id="car2-right-btn">Right</button>
+                    </div>
+                    <div>
+                        <button id="car2-modify-btn">Revese </button>
+                    </div>
+                    <div>
+                        <button id="car2-rotate-positive">Turn Left</button>
+                        <button id="car2-rotate-negative">Turn Right</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
