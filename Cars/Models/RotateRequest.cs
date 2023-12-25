@@ -1,4 +1,4 @@
-﻿namespace Cars.Controllers
+﻿namespace Cars.Models
 {
     public class RotateRequest
     {

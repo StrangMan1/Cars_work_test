@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Cars.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Cars.Controllers
 {
@@ -39,7 +40,7 @@ namespace Cars.Controllers
             double angleInRadians = angleInDegrees * (Math.PI / 180);
             double cosTheta = Math.Cos(angleInRadians);
             double sinTheta = Math.Sin(angleInRadians);
-            double dx, dy, newX, newY;
+            double dx, dy;
 
             foreach (var line in points)
             {
