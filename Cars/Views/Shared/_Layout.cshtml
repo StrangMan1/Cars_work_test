@@ -7,10 +7,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>@ViewData["Title"] - Cars</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Cars.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -40,13 +37,13 @@
                                 <input id="car1-speed-input" type="number" value="1" />
                             </label>
                         </div>
-                    <div>
-                        <button id="car1-modify-btn">Reverse</button>
-                    </div>
-                    <div>
-                        <button id="car1-rotate-positive">Turn Left</button>
-                        <button id="car1-rotate-negative">Turn Right</button>
-                    </div>
+                        <div>
+                            <button id="car1-modify-btn">Reverse</button>
+                        </div>
+                        <div>
+                            <button id="car1-rotate-positive">Turn Left</button>
+                            <button id="car1-rotate-negative">Turn Right</button>
+                        </div>
                     </div>
                 </div>
                 <div class="car2-controls controls">
@@ -70,13 +67,13 @@
                                 <input id="car2-speed-input" type="number" value="1" />
                             </label>
                         </div>
-                    <div>
-                        <button id="car2-modify-btn">Reverse</button>
-                    </div>
-                    <div>
-                        <button id="car2-rotate-positive">Turn Left</button>
-                        <button id="car2-rotate-negative">Turn Right</button>
-                    </div>
+                        <div>
+                            <button id="car2-modify-btn">Reverse</button>
+                        </div>
+                        <div>
+                            <button id="car2-rotate-positive">Turn Left</button>
+                            <button id="car2-rotate-negative">Turn Right</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -88,8 +85,6 @@
         </main>
     </div>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
