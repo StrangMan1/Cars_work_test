@@ -1,32 +1,17 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
 * {
     margin: 0;
     padding: 0;
 }
 
 .app {
-    max-width: 1360px;
+    max-width: 1000px;
     margin: 10px auto;
+    font-family: sans-serif;
 }
 
-.cars-container {
+#canvas {
     border-radius: 4px;
     border: 2px solid #ddd;
-    max-height: 680px;
     margin-bottom: 10px;
 }
 
@@ -39,26 +24,31 @@ html {
     border-radius: 4px;
     border: 2px solid #ddd;
     width: 200px;
-    margin: 0 5px
+    margin: 0 5px;
+    padding: 10px;
 }
 
 .car1-controls {
-    border-color: crimson;
+    border-color: rgb(49, 107, 182);
 }
 
 .car2-controls {
-    border-color: dodgerblue;
+    border-color: rgb(96, 176, 119);
 }
 
 .navigation button {
-    width: 50px;
+    width: 65px;
     margin: 5px;
 }
 
 .navigation {
     text-align: center;
 }
-.parent-element {
 
-    border: none;
+.speed-input {
+    margin-top: 10px;
 }
+
+    .speed-input input {
+        width: 50px;
+    }

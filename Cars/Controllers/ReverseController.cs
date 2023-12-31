@@ -6,14 +6,27 @@ namespace Cars.Controllers
 {
     public class ReverseController : Controller
     {
-        public JsonResult ModifyCar([FromBody] List<Point> carPoints)
+        public JsonResult ModifyCar([FromBody] NumberInput NumberCar)
         {
-            var ReverswPoints = ReversoCar(carPoints);
+            var ReverswPoints = new List<Point>();
+
+            if (NumberCar.Number == 1 )
+            {
+                ReverswPoints = CarModel.Car1Points;
+
+            }
+            else
+            {
+                ReverswPoints = CarModel.Car2Points;
+
+            }
+            ReverswPoints = ReversoCar(ReverswPoints);
             return Json(ReverswPoints);
         }
 
         private List<Point> ReversoCar(List<Point> points)
         {
+            var changedPoints = new List<Point>(points.Count);
             double Xmax = 0, Xmin = points[1].X, Xcentr;
             foreach (var line in points)
             {
@@ -40,8 +53,13 @@ namespace Cars.Controllers
                     diameter = -2 * (line.X - Xcentr);
                     line.X = line.X + diameter;
                 }
+                changedPoints.Add(new Point
+                {
+                    X = (int)(line.X),
+                    Y = (int)(line.Y)
+                });
             }
-            return points;
+            return changedPoints;
         }
     }
 }

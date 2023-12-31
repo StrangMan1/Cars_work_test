@@ -1,8 +1,7 @@
 ﻿namespace Cars.Models
 {
-    public class RotateRequest
+    public class NumberInput
     {
         public int Number { get; set; }
-        public double Value { get; set; }
     }
 }

@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>@ViewData["Title"] - Cars</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -14,51 +14,73 @@
 </head>
 <body>
 
-    <div class="app">
-        <div class="cars-container">
-            <canvas id="canvas"></canvas>
-        </div>
-        <div class="controls-container">
-            <div class="car1-controls controls">
-                <div class="navigation">
+        <div class="app">
+            <div class="cars-container">
+                <canvas id="canvas" width="1000" height="400"></canvas>
+            </div>
+            <div class="controls-container">
+                <div class="car1-controls controls">
+                    <div class="navigation">
+                        <div>
+                            <button id="car1-up-btn">Up</button>
+                        </div>
+
+                        <div>
+                            <button id="car1-left-btn">Left</button>
+                            <button id="car1-right-btn">Right</button>
+                        </div>
+
+                        <div>
+                            <button id="car1-down-btn">Down</button>
+                        </div>
+
+                        <div class="speed-input">
+                            <label title="Amount of pixels to move the car vertically/horizontally (positive integer)">
+                                <span>Speed:</span>
+                                <input id="car1-speed-input" type="number" value="1" />
+                            </label>
+                        </div>
                     <div>
-                        <button id="car1-up-btn">Up</button>
-                        <button id="car1-down-btn">Down</button>
-                    </div>
-                    <div>
-                        <button id="car1-left-btn">Left</button>
-                        <button id="car1-right-btn">Right</button>
-                    </div>
-                    <div>
-                        <button id="car1-modify-btn">Revese </button>
+                        <button id="car1-modify-btn">Reverse</button>
                     </div>
                     <div>
                         <button id="car1-rotate-positive">Turn Left</button>
                         <button id="car1-rotate-negative">Turn Right</button>
                     </div>
+                    </div>
                 </div>
-            </div>
-            <div class="car2-controls controls">
-                <div class="navigation">
+                <div class="car2-controls controls">
+                    <div class="navigation">
+                        <div>
+                            <button id="car2-up-btn">Up</button>
+                        </div>
+
+                        <div>
+                            <button id="car2-left-btn">Left</button>
+                            <button id="car2-right-btn">Right</button>
+                        </div>
+
+                        <div>
+                            <button id="car2-down-btn">Down</button>
+                        </div>
+
+                        <div class="speed-input">
+                            <label title="Amount of pixels to move the car vertically/horizontally (positive integer)">
+                                <span>Speed:</span>
+                                <input id="car2-speed-input" type="number" value="1" />
+                            </label>
+                        </div>
                     <div>
-                        <button id="car2-up-btn">Up</button>
-                        <button id="car2-down-btn">Down</button>
-                    </div>
-                    <div>
-                        <button id="car2-left-btn">Left</button>
-                        <button id="car2-right-btn">Right</button>
-                    </div>
-                    <div>
-                        <button id="car2-modify-btn">Revese </button>
+                        <button id="car2-modify-btn">Reverse</button>
                     </div>
                     <div>
                         <button id="car2-rotate-positive">Turn Left</button>
                         <button id="car2-rotate-negative">Turn Right</button>
                     </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
     <div class="container">
         <main role="main" class="pb-3">

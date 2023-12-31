@@ -3,38 +3,36 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cars.Controllers
 {
+
     public class TurnController : Controller
     {
         public JsonResult RotateCar([FromBody] RotateRequest request)
         {
-            var rotatedPoints = TurnCar(request.Model, request.Value);
+            var rotatedPoints = new List<Point>();
+
+            if (request.Number == 1)
+            {
+                rotatedPoints = CarModel.Car1Points;
+
+            }
+            else
+            {
+                rotatedPoints = CarModel.Car2Points;
+
+            }
+            rotatedPoints = TurnCar(rotatedPoints, request.Value);
             return Json(rotatedPoints);
         }
 
         private List<Point> TurnCar(List<Point> points, double angleInDegrees)
         {
+            var changedPoints = new List<Point>(points.Count);
             Point PointCentr = new Point();
-            double Xmax = 0, Xmin = points[1].X;
-            double Ymax = 0, Ymin = points[1].Y;
-            foreach (var line in points)
-            {
-                if (line.X > Xmax)
-                {
-                    Xmax = line.X;
-                }
-                else if (line.X < Xmin)
-                {
-                    Xmin = line.X;
-                }
-                if (line.Y > Ymax)
-                {
-                    Ymax = line.Y;
-                }
-                else if (line.Y < Ymin)
-                {
-                    Ymin = line.Y;
-                }
-            }
+            double Xmax = points.Max(p => p.X);
+            double Xmin = points.Min(p => p.X);
+            double Ymax = points.Max(p => p.Y);
+            double Ymin = points.Min(p => p.Y);
+
             PointCentr.X = Xmin + (Xmax - Xmin) / 2;
             PointCentr.Y = Ymin + (Ymax - Ymin) / 2;
             double angleInRadians = angleInDegrees * (Math.PI / 180);
@@ -46,10 +44,15 @@ namespace Cars.Controllers
             {
                 dx = line.X - PointCentr.X;
                 dy = line.Y - PointCentr.Y;
-                line.X = (int)((dx * cosTheta - dy * sinTheta) + PointCentr.X);
-                line.Y = (int)((dx * sinTheta + dy * cosTheta) + PointCentr.Y);
+                line.X = (dx * cosTheta - dy * sinTheta) + PointCentr.X;
+                line.Y = (dx * sinTheta + dy * cosTheta) + PointCentr.Y;
+                changedPoints.Add(new Point
+                {
+                    X = (int)(line.X),
+                    Y = (int)(line.Y)
+                });
             }
-            return points;
+            return changedPoints;
         }
     }
 }
