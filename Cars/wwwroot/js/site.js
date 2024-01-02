@@ -1,248 +1,278 @@
 ﻿
-          
-
 document.addEventListener('DOMContentLoaded', () => {
 
-    let shouldTriggerIntersectionsPaint = true;
-    const speed = 50;
-    const moveCar1 = (callback) => {
-        Car1Model = Car1Model.map(callback);
+    const canvas = document.getElementById('canvas');
+    const canvasCtx = canvas.getContext('2d');
 
-        shouldTriggerIntersectionsPaint = true;
+    const car1SpeedInput = document.getElementById('car1-speed-input');
+    const car2SpeedInput = document.getElementById('car2-speed-input');
 
-        chart.data.datasets[0].data = Car1Model;
-        chart.update();
-    };
+    const DEFAULT_SPEED = 1;
+    const VALID_SPEED_REGEX = /^[1-9]\d*$/;
 
-    const moveCar2 = (callback) => {
-        Car2Model = Car2Model.map(callback);
+    const getCarSpeed = (carSpeedInput) => {
+        const isValidSpeed = VALID_SPEED_REGEX.test(carSpeedInput.value);
 
-        shouldTriggerIntersectionsPaint = true;
+        return isValidSpeed ? +carSpeedInput.value : DEFAULT_SPEED;
+    }
 
-        chart.data.datasets[1].data = Car2Model;
-        chart.update();
-    };
-
-    const moveCar1Left = () => {
-        moveCar1(({ x, y }) => ({ x: x - speed, y }));
-    };
-
-    const moveCar2Left = () => {
-        moveCar2(({ x, y }) => ({ x: x - speed, y }));
-    };
-
-    const moveCar1Right = () => {
-        moveCar1(({ x, y }) => ({ x: x + speed, y }));
-    };
-
-    const moveCar2Right = () => {
-        moveCar2(({ x, y }) => ({ x: x + speed, y }));
-    };
-
-    const moveCar1Up = () => {
-        moveCar1(({ x, y }) => ({ x, y: y + speed }));
-    };
-
-    const moveCar2Up = () => {
-        moveCar2(({ x, y }) => ({ x, y: y + speed }));
-    };
-
-    const moveCar1Down = () => {
-        moveCar1(({ x, y }) => ({ x, y: y - speed }));
-    };
-
-    const moveCar2Down = () => {
-        moveCar2(({ x, y }) => ({ x, y: y - speed }));
-    };
+    const getCar1Speed = getCarSpeed.bind(null, car1SpeedInput);
+    const getCar2Speed = getCarSpeed.bind(null, car2SpeedInput);
 
     const getIntersections = () => {
-        const car1Coordinates = Car1Model.reduce((result, { x, y }) => [...result, `${x}:${y}`], []);
-        const car2Coordinates = Car2Model.reduce((result, { x, y }) => [...result, `${x}:${y}`], []);
-        const intersections = car1Coordinates.filter(el => car2Coordinates.includes(el));
+        const car1Coordinates = {};
 
-        return intersections.map(el => {
-            const [x, y] = el.split(':');
-
-            return { x, y };
+        Car1Model.forEach(({ x, y }) => {
+            car1Coordinates[`${x}:${y}`] = true;
         });
+        
+        return Car2Model.filter(
+            ({ x, y }) => car1Coordinates[`${x}:${y}`]
+        );
     };
 
-    const handleAfterDraw = (chart) => {
-        if (!shouldTriggerIntersectionsPaint) {
-            return;
-        }
+    const drawPixelsByCoordinates = (
+        coordinates,
+        pixels,
+        { r, g, b }
+    ) => {
+        for (let i = 0; i < coordinates.length; i++) {
+            const x = coordinates[i].x;
+            const y = canvas.height - coordinates[i].y;
 
-        shouldTriggerIntersectionsPaint = false;
-
-        chart.data.datasets[2].data = getIntersections();
-        chart.update();
-    };
-
-    const chart = new Chart(document.getElementById('canvas'), {
-        type: 'scatter',
-        data: {
-            datasets: [
-                {
-                    label: 'Car 1',
-                    data: Car1Model,
-                    backgroundColor: 'crimson',
-                    order: 1,
-                },
-                {
-                    label: 'Car 2',
-                    data: Car2Model,
-                    backgroundColor: 'dodgerblue',
-                    order: 2,
-                },
-                {
-                    label: 'Intersections',
-                    data: [],
-                    backgroundColor: 'mediumseagreen',
-                    borderColor: '#000',
-                    order: 0,
-                    pointRadius: 4,
-                    animation: false,
-                }
-            ],
-        },
-        plugins: [
-            {
-                afterDraw: handleAfterDraw,
+            if (x < 0 || y < 0 || x > canvas.width || y > canvas.height) {
+                continue;
             }
-        ],
-        options: {
-            plugins: {
-                tooltip: {
-                    enabled: false,
-                },
-                legend: {
-                    display: false
-                },
-            },
-            scales: {
-                x: {
-                    display: false,
-                    ticks: {
-                        stepSize: 1,
-                    },
-                    min: -560,
-                    max: 1440,
-                },
-                y: {
-                    display: false,
-                    ticks: {
-                        stepSize: 1,
-                    },
-                    min: -400,
-                    max: 600,
-                },
-            },
-        },
-    });
 
-    document.getElementById('car1-left-btn').addEventListener('click', moveCar1Left);
-    document.getElementById('car1-right-btn').addEventListener('click', moveCar1Right);
-    document.getElementById('car1-up-btn').addEventListener('click', moveCar1Up);
-    document.getElementById('car1-down-btn').addEventListener('click', moveCar1Down);
+            const index = (y * canvas.width + x) * 4;
 
-    document.getElementById('car2-left-btn').addEventListener('click', moveCar2Left);
-    document.getElementById('car2-right-btn').addEventListener('click', moveCar2Right);
-    document.getElementById('car2-up-btn').addEventListener('click', moveCar2Up);
-    document.getElementById('car2-down-btn').addEventListener('click', moveCar2Down);
+            pixels[index] = r;
+            pixels[index + 1] = g;
+            pixels[index + 2] = b;
+            pixels[index + 3] = 255;
+        }
+    };
 
-    document.getElementById('car1-modify-btn').addEventListener('click', function () {
-        fetch('/Home/ModifyCar', {
+    const drawImage = () => {
+        const imageData = canvasCtx.createImageData(
+            canvas.width,
+            canvas.height
+        );
+        const pixels = imageData.data;
+
+        drawPixelsByCoordinates(Car1Model, pixels, { r: 49, g: 107, b: 182 });
+        drawPixelsByCoordinates(Car2Model, pixels, { r: 96, g: 176, b: 119 });
+        drawPixelsByCoordinates(getIntersections(), pixels, { r: 199, g: 48, b: 65 });
+
+        canvasCtx.putImageData(imageData, 0, 0);
+    };
+
+    drawImage();
+
+
+    document.getElementById('car1-left-btn').addEventListener('click', function () {
+        const speed = getCar1Speed();
+        fetch('/CarMove/Move', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(Car1Model)
+            body: JSON.stringify({ name: 'car1-left', speed })
         })
             .then(response => response.json())
             .then(data => {
                 Car1Model = data;
-                chart.data.datasets[0].data = Car1Model;
-                chart.update();
+                drawImage();
+            });
+    });
+
+    document.getElementById('car1-right-btn').addEventListener('click', function () {
+        fetch('/CarMove/Move', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name: 'car1-right', speed: getCar1Speed() })
+        })
+            .then(response => response.json())
+            .then(data => {
+                Car1Model = data;
+                drawImage();
+            });
+    });
+    document.getElementById('car1-up-btn').addEventListener('click', function () {
+        fetch('/CarMove/Move', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name: 'car1-up', speed: getCar1Speed() })
+        })
+            .then(response => response.json())
+            .then(data => {
+                Car1Model = data;
+                drawImage();
+            });
+    });
+    document.getElementById('car1-down-btn').addEventListener('click', function () {
+        fetch('/CarMove/Move', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name: 'car1-down', speed: getCar1Speed() })
+        })
+            .then(response => response.json())
+            .then(data => {
+                Car1Model = data;
+                drawImage();
+            });
+    });
+
+    document.getElementById('car2-left-btn').addEventListener('click', function () {
+        fetch('/CarMove/Move', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name: 'car2-left', speed: getCar2Speed() })
+        })
+            .then(response => response.json())
+            .then(data => {
+                Car2Model = data;
+                drawImage();
+            });
+    });
+    document.getElementById('car2-right-btn').addEventListener('click', function () {
+        fetch('/CarMove/Move', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name: 'car2-right', speed: getCar2Speed() })
+        })
+            .then(response => response.json())
+            .then(data => {
+                Car2Model = data;
+                drawImage();
+            });
+    });
+    document.getElementById('car2-up-btn').addEventListener('click', function () {
+        fetch('/CarMove/Move', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name: 'car2-up', speed: getCar2Speed() })
+        })
+            .then(response => response.json())
+            .then(data => {
+                Car2Model = data;
+                drawImage();
+            });
+    });
+    document.getElementById('car2-down-btn').addEventListener('click', function () {
+        fetch('/CarMove/Move', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name: 'car2-down', speed: getCar2Speed() })
+        })
+            .then(response => response.json())
+            .then(data => {
+                Car2Model = data;
+                drawImage();
+            });
+    });
+
+    document.getElementById('car1-modify-btn').addEventListener('click', function () {
+        fetch('/Reverse/ModifyCar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ number: 1 })
+        })
+            .then(response => response.json())
+            .then(data => {
+                Car1Model = data;
+                drawImage();
             });
     });
 
     document.getElementById('car2-modify-btn').addEventListener('click', function () {
-        fetch('/Home/ModifyCar', {
+        fetch('/Reverse/ModifyCar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(Car2Model)
+            body: JSON.stringify({ number: 2 })
         })
             .then(response => response.json())
             .then(data => {
                 Car2Model = data;
-                chart.data.datasets[1].data = Car2Model;
-                chart.update();
+                drawImage();
             });
     });
+
     document.getElementById('car1-rotate-positive').addEventListener('click', function () {
-        fetch('/Home/RotateCar', {
+        fetch('/Turn/RotateCar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ model: Car1Model, value: 30 })
+            body: JSON.stringify({ number: 1, value: 30 })
         })
             .then(response => response.json())
             .then(data => {
                 Car1Model = data;
-                chart.data.datasets[0].data = Car1Model;
-                chart.update();
+                drawImage();
             });
     });
 
     document.getElementById('car1-rotate-negative').addEventListener('click', function () {
-        fetch('/Home/RotateCar', {
+        fetch('/Turn/RotateCar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ model: Car1Model, value: -30 })
+            body: JSON.stringify({ number: 1, value: -30 })
         })
             .then(response => response.json())
             .then(data => {
                 Car1Model = data;
-                chart.data.datasets[0].data = Car1Model;
-                chart.update();
+                drawImage();
             });
     });
 
     document.getElementById('car2-rotate-positive').addEventListener('click', function () {
-        fetch('/Home/RotateCar', {
+        fetch('/Turn/RotateCar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ model: Car2Model, value: 30 })
+            body: JSON.stringify({ number: 2, value: 30 })
         })
             .then(response => response.json())
             .then(data => {
                 Car2Model = data;
-                chart.data.datasets[1].data = Car2Model;
-                chart.update();
+                drawImage();
             });
     });
 
     document.getElementById('car2-rotate-negative').addEventListener('click', function () {
-        fetch('/Home/RotateCar', {
+        fetch('/Turn/RotateCar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ model: Car2Model, value: -30 })
+            body: JSON.stringify({ number: 2, value: -30 })
         })
             .then(response => response.json())
             .then(data => {
                 Car2Model = data;
-                chart.data.datasets[1].data = Car2Model;
-                chart.update();
+                drawImage();
             });
     });
 });
-

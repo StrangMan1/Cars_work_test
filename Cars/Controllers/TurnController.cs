@@ -36,20 +36,16 @@ namespace Cars.Controllers
             PointCentr.X = Xmin + (Xmax - Xmin) / 2;
             PointCentr.Y = Ymin + (Ymax - Ymin) / 2;
             double angleInRadians = angleInDegrees * (Math.PI / 180);
-            double cosTheta = Math.Cos(angleInRadians);
-            double sinTheta = Math.Sin(angleInRadians);
-            double dx, dy;
-
-            foreach (var line in points)
+            foreach (var point in points)
             {
-                dx = line.X - PointCentr.X;
-                dy = line.Y - PointCentr.Y;
-                line.X = (dx * cosTheta - dy * sinTheta) + PointCentr.X;
-                line.Y = (dx * sinTheta + dy * cosTheta) + PointCentr.Y;
+                double dx = point.X - PointCentr.X;
+                double dy = point.Y - PointCentr.Y;
+                point.X = (dx * Math.Cos(angleInRadians) - dy * Math.Sin(angleInRadians)) + PointCentr.X;
+                point.Y = (dx * Math.Sin(angleInRadians) + dy * Math.Cos(angleInRadians)) + PointCentr.Y;
                 changedPoints.Add(new Point
                 {
-                    X = (int)(line.X),
-                    Y = (int)(line.Y)
+                    X = (int)point.X,
+                    Y = (int)point.Y
                 });
             }
             return changedPoints;
